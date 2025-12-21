@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-
 public class ControlCenter {
 
     // Attributes
@@ -11,10 +10,11 @@ public class ControlCenter {
     private Map map;
 
     // Global statistics
-    private static int numberOfDeliveries = 0;
     private static double totalDistance = 0.0;
     private static double energyConsumed = 0.0;
-
+    private static int totalorders  = 0 ; 
+    private static int succesfulorders = 0 ; 
+    private static int failedorders = 0 ; 
     // Constructor
     public ControlCenter(Position base, Map map) {
         this.base = base;
@@ -28,19 +28,26 @@ public class ControlCenter {
     public void addDrone(Drone drone) {
         fleet.add(drone);
     }
+    public void addOrder (Order order){
+        pendingOrders.add(order);
+    }
 
     // Find a suitable drone for an order
     public Drone findDroneForOrder(Order order) {
+        Drone fastest = null ; 
+        double maxspeed = 0.0 ; 
         for (Drone drone : fleet) {
             if ("AVAILABLE".equals(drone.getStatus())
                 && drone.getCapacity() >= order.getDeliverable().getWeight()
                 && map.isAllowed(order.getDestination())
                 && drone.canFlyTo(order.getDestination())) {
-
-                return drone;
+                if(drone.getspeed() > maxspeed ){
+                 maxspeed = drone.getspeed() ;
+                 fastest = drone ; 
+                }    
             }
         }
-        return null;
+        return fastest ; 
     }
 
     // Assign an order to a drone
@@ -53,7 +60,6 @@ public class ControlCenter {
             order.setState("PENDING");
             return false;
         }
-
         // Calculate round-trip distance and energy consumption
         double distance = base.distanceTo(order.getDestination()) * 2;
         double consumption = drone.calculateConsumption(distance);
@@ -74,12 +80,15 @@ public class ControlCenter {
 
         // Add to processed orders
         processedOrders.add(order);
-
         // Update global statistics
-        numberOfDeliveries++;
+        totalorders += 1 ;
         totalDistance += distance;
         energyConsumed += consumption;
-
+        if ("DELIVERED".equals(order.getState())) {
+            succesfulorders += 1 ;
+        }else{
+            failedorders += 1 ; 
+        }
         return true;
     }
 
@@ -103,10 +112,11 @@ public class ControlCenter {
     }
 
     // Statistics getters
-    public static int getNumberOfDeliveries() { return numberOfDeliveries; }
+    public static int gettotalorders() { return totalorders; }
     public static double getTotalDistance() { return totalDistance; }
     public static double getEnergyConsumed() { return energyConsumed; }
-
+    public static int getsuccesfulorders(){return succesfulorders ; }
+    public static int getfailedorders(){ return failedorders ; }
     // Lists getters
     public List<Order> getPendingOrders() { return pendingOrders; }
     public List<Order> getProcessedOrders() { return processedOrders; }

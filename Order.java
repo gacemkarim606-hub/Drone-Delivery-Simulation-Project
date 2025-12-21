@@ -8,7 +8,7 @@ public class Order {
     private double cost;
     private String urgency; // "NORMAL" or "EXPRESS"
     private String status;  // "PENDING","IN PROGRESS","DELIVERED","FAILED"
-
+    private String FailureReason ;
     // Constructor
     public Order(String client, Deliverable deliverable,String urgency, double cost) {
         this.id = nextId++;
@@ -27,6 +27,8 @@ public class Order {
                ", urgency=" + urgency +
                ", cost=" + cost +
                ", status=" + status + '}';
+               ", status=" + status + 
+               (FailureReason != null ?", reason = " + FailureReason:"") + '}';
     }
 
     public boolean equals(Order other) {
@@ -63,6 +65,10 @@ public class Order {
     
     public double getCost() {
         return cost;
+    }
+    public void fail(String reason){
+        this.status = OrderState.FAILED ; 
+        this.FailureReason = reason ; 
     }
 
 }

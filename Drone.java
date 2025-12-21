@@ -36,7 +36,7 @@ public abstract class Drone {
     public String getStatus() { return status; }
     public double getTotalDistance() { return totalDistance; }
     public List<Position> getPositionHistory() { return positionHistory; }
-	
+	public double getspeed(){return speed ; }
     //abstract Methods
     public abstract double calculateConsumption(double distance);
     

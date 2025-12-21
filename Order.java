@@ -26,7 +26,6 @@ public class Order {
                ", deliverable=" + deliverable +
                ", urgency=" + urgency +
                ", cost=" + cost +
-               ", status=" + status + '}';
                ", status=" + status + 
                (FailureReason != null ?", reason = " + FailureReason:"") + '}';
     }

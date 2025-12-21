@@ -66,7 +66,7 @@ public class Order {
         return cost;
     }
     public void fail(String reason){
-        this.status = OrderState.FAILED ; 
+        this.status = "FAILED" ; 
         this.FailureReason = reason ; 
     }
 
